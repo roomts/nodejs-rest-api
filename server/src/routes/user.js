@@ -1,0 +1,15 @@
+var express = require('express')
+var router = express.Router()
+const {AuthenticationController} = require('../controllers/user')
+const AuthenticationControllerPolicy = require('../policies/AuthenticationControllerPolicy')
+const AuthenticatedPolicy = require('../policies/isAuthenticated')
+
+router.post('/register', AuthenticationControllerPolicy.register, AuthenticationController.register)
+router.post('/login', AuthenticationController.login)
+router.post('/abandon', AuthenticatedPolicy, AuthenticationController.deactivateUser)
+router.post('/update', AuthenticatedPolicy, AuthenticationController.updateUser)
+router.get('/get', AuthenticatedPolicy, AuthenticationController.getOne)
+router.get('/get/all', AuthenticatedPolicy, AuthenticatedPolicy, AuthenticationController.getAll)
+router.get('/2fa/otp', AuthenticatedPolicy, AuthenticationController.generateOTP)
+router.post('/2fa/enable', AuthenticatedPolicy, AuthenticationController.confirmOTP)
+module.exports = router
